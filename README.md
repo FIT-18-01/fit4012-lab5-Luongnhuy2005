@@ -71,11 +71,11 @@ printf "hello FIT4012 AES\n" | ./build/encrypt
 
 ## 3. Input / Đầu vào
 
-Chương trình mã hóa `encrypt.cpp` nhận plaintext từ bàn phím bằng `cin.getline(...)`.
+Chương trình `encrypt.cpp` nhận plaintext từ bàn phím bằng `cin.getline(...)` (một dòng).
 
-Chương trình giải mã `decrypt.cpp` đọc ciphertext từ file `message.aes`.
+Chương trình `decrypt.cpp` đọc ciphertext (byte thô) từ file `message.aes`.
 
-Cả hai chương trình đều đọc khóa AES-128 từ file `keyfile`. File `keyfile` đang dùng định dạng 16 byte biểu diễn dưới dạng hex, ví dụ:
+Cả hai chương trình đều đọc khóa AES-128 từ file `keyfile`. File `keyfile` đang dùng định dạng **16 byte** dưới dạng **hex (mỗi byte cách nhau bởi khoảng trắng)**, ví dụ:
 
 ```text
 01 04 02 03 01 03 04 0A 09 0B 07 0F 0F 06 03 00
@@ -84,14 +84,16 @@ Cả hai chương trình đều đọc khóa AES-128 từ file `keyfile`. File `
 ## 4. Output / Đầu ra
 
 - `encrypt` in ciphertext theo dạng hex ra màn hình.
-- `encrypt` ghi ciphertext ra file `message.aes`.
-- `decrypt` đọc `message.aes`, in plaintext dạng hex và plaintext dạng ký tự.
+- `encrypt` ghi ciphertext (byte thô, binary-safe) ra file `message.aes`.
+- `decrypt` đọc `message.aes` (byte thô), rồi in plaintext dạng hex và plaintext dạng ký tự (theo đúng bytes sau decrypt, có thể chứa `0x00` ở cuối do padding).
+
 
 ## 5. Padding đang dùng
 
 Code hiện tại dùng **zero padding**: nếu plaintext không chia hết cho 16 byte, chương trình thêm byte `0x00` cho đủ block 128-bit.
 
-Lưu ý: zero padding phù hợp để minh họa nhập môn, nhưng không phải lựa chọn an toàn/đầy đủ cho ứng dụng thực tế vì có thể gây nhập nhằng giữa byte dữ liệu thật `0x00` và byte padding.
+Lưu ý: zero padding có thể gây mơ hồ khi plaintext gốc cũng có chứa byte `0x00` ở phần cuối, nên chỉ phù hợp để học/giải bài tập.
+
 
 ## 6. Tests bắt buộc
 
